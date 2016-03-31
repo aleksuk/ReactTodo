@@ -1,5 +1,5 @@
 import AppDispatcher from '../dispatcher/app-dispatcher';
-import TodoConstants from '../constants/todo-constants';
+import TaskConstants from '../constants/task-constants';
 import Collection from '../utils/collection';
 import { Store } from 'flux/utils';
 
@@ -19,12 +19,16 @@ class TaskStore extends Store {
 
   __onDispatch(action) {
     switch (action.actionType) {
-      case TodoConstants.TASKS_DATA_IS_UPDATED:
+      case TaskConstants.TASKS_DATA_IS_UPDATED:
         getTasks(action.todoId).set(action.data.tasks);
         this.__emitChange();
         break;
 
-      case TodoConstants.TODO_CREATE:
+      case TaskConstants.TASK_DATA_IS_UPDATED:
+        getTasks(action.todoId).updateItem(action.data.task);
+        this.__emitChange();
+        break;
+      case TaskConstants.TASK_UNCOMPLETE:
         // getTasks(action.todoId).add(action.data.task);
         // this.__emitChange();
         break;

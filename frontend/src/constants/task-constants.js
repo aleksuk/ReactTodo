@@ -4,6 +4,7 @@ export default keyMirror({
   TASKS_FETCH: null,
   TASKS_DATA_IS_UPDATED: null,
   TASK_CREATE: null,
+  TASK_DATA_IS_UPDATED: null,
   TASK_COMPLETE: null,
   TASK_UNCOMPLETE: null,
   TASK_DESTROY: null,

@@ -26,4 +26,10 @@ export default class Collection {
     this.data = [];
   }
 
+  updateItem(data) {
+    var item = this.find(data.id);
+    
+    _.extend(item, data);
+  }
+
 }

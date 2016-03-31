@@ -6,7 +6,7 @@ export default {
   findAll() {
     return ajax({
       url: '/todos'
-    }).then((data) => TodoActions.updateCollectionData(data));
+    }).then((data) => setTimeout(() => {TodoActions.updateCollectionData(data)}, 0));
   },
 
   find(id) {

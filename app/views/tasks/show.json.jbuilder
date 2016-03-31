@@ -1,3 +1,3 @@
 json.task do
-  json.extract! @task, :id, :title
+  json.extract! @task, :id, :title, :isCompleted
 end

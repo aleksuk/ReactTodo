@@ -36,6 +36,8 @@ var TaskActions = {
       todoId: todoId,
       id: id
     });
+
+    tasksApi.complete(todoId, id);
   },
 
   uncompleteTask(todoId, id) {
@@ -44,11 +46,21 @@ var TaskActions = {
       todoId: todoId,
       id: id
     });
+
+    tasksApi.uncomplete(todoId, id);
   },
 
-  updateCollectionData(data, todoId) {
+  updateCollectionData(todoId, data) {
     AppDispatcher.dispatch({
-      actionType: TodoConstants.TASKS_DATA_IS_UPDATED,
+      actionType: TaskConstants.TASKS_DATA_IS_UPDATED,
+      todoId: todoId,
+      data: data
+    });
+  },
+
+  updateItemData(todoId, data) {
+    AppDispatcher.dispatch({
+      actionType: TaskConstants.TASK_DATA_IS_UPDATED,
       todoId: todoId,
       data: data
     });

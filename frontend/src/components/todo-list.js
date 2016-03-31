@@ -22,7 +22,10 @@ export default class TodoList extends React.Component {
 
   componentDidMount() {
     TaskStore.addListener(this._onChange);
-    this.loadData();
+    
+    setTimeout(() => {
+      this.loadData();
+    }, 0);
   }
 
   componentWillUnmount() {
@@ -51,10 +54,8 @@ export default class TodoList extends React.Component {
   }
 
   _onChange(id) {
-    if (this.props.todo.id === id) {
-      this.setState({
-        tasks: TaskStore.getAll(this.props.todo.id)
-      });
-    }
+    this.setState({
+      tasks: TaskStore.getAll(this.props.todo.id)
+    });
   }
 }

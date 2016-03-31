@@ -19,7 +19,7 @@ class TodoStore extends Store {
         break;
 
       case TodoConstants.TODO_CREATE:
-        todos.push(action.data);
+        todos.add(action.data);
         this.__emitChange();
         break;
 

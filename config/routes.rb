@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   root 'main#index'
-  
+
   resources :todos, only: [:index, :show, :update, :create, :destroy], defaults: { format: :json } do
     resources :tasks, only: [:index, :show, :update, :create, :destroy], defaults: { format: :json }
   end

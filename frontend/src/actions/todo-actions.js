@@ -23,6 +23,7 @@ var TodoActions = {
     AppDispatcher.dispatch({
       actionType: TodoConstants.TODOS_FETCH
     });
+    
     todoApi.findAll();
   },
 
