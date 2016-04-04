@@ -1,5 +1,7 @@
 import ajax from 'reqwest';
 import TodoActions from '../actions/todo-actions';
+import NotifyActions from '../actions/notify-actions';
+import showErrorNotify from '../utils/notify-error';
 import _ from 'underscore';
 
 var todoUrl = _.template('/todos/<%= todoId %>');
@@ -15,15 +17,6 @@ export default {
     });
   },
 
-  find(id) {
-    return ajax({
-      url: todoUrl({ todoId: id })
-    })
-    .then((data) => {
-      TodoActions.updateItemData(data)
-    });
-  },
-
   create(todo) {
     return ajax({
       method: 'post',
@@ -32,8 +25,13 @@ export default {
         todo: todo
       }
     }).then((data) => {
+      NotifyActions.showSuccessNotify({
+        strongMessage: 'Success!',
+        message: 'Todo created!'
+      });
+
       TodoActions.addItem(data)
-    });
+    }, showErrorNotify);
   },
 
   update(todo) {
@@ -44,8 +42,13 @@ export default {
         todo: todo
       }
     }).then((data) => {
+      NotifyActions.showSuccessNotify({
+        strongMessage: 'Success!',
+        message: 'Todo updated!'
+      });
+
       TodoActions.updateItemData(data)
-    });
+    }, showErrorNotify);
   },
 
   destroy(todo) {
@@ -53,8 +56,13 @@ export default {
       method: 'delete',
       url: todoUrl({ todoId: todo.id })
     }).then(() => {
+      NotifyActions.showSuccessNotify({
+        strongMessage: 'Success!',
+        message: 'Todo destroyed!'
+      });
+
       TodoActions.deleteItem({ todo: todo })
-    });
+    }, showErrorNotify);
   }
 
 };

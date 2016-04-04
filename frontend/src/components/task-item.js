@@ -15,6 +15,24 @@ export default class TaskItem extends React.Component {
     this.deleteTask = this.deleteTask.bind(this);
   }
 
+  changeTaskStatus() {
+    let task = this.props.task;
+
+    if (task.isCompleted) {
+      TaskActions.uncompleteTask(task.todo_id, task.id);
+    } else {
+      TaskActions.completeTask(task.todo_id, task.id);
+    }
+  }
+
+  editTask() {
+    this.props.onEdit(this.props.task);
+  }
+
+  deleteTask() {
+    this.props.onDelete(this.props.task);
+  }
+
   render() {
     return (
       <li className="task-item">
@@ -37,24 +55,6 @@ export default class TaskItem extends React.Component {
         </div>
       </li>
     );
-  }
-
-  changeTaskStatus() {
-    let task = this.props.task;
-
-    if (task.isCompleted) {
-      TaskActions.uncompleteTask(task.todo_id, task.id);
-    } else {
-      TaskActions.completeTask(task.todo_id, task.id);
-    }
-  }
-
-  editTask() {
-    this.props.onEdit(this.props.task);
-  }
-
-  deleteTask() {
-    this.props.onDelete(this.props.task);
   }
 
 }

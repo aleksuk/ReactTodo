@@ -11,14 +11,15 @@ export default class TodoList extends React.Component {
     super(...arguments);
     this.bindMethods();
 
+    this.modalMethods = {
+      onClose: this.closeTaskModal,
+      onSuccess: this.onSaveTask,
+      onDanger: this.onDestroyTask
+    };
+
     this.state = {
       tasks: [],
       isShowedModal: false,
-      modalMethods: {
-        onClose: this.closeTaskModal,
-        onSuccess: this.onSaveTask,
-        onDanger: this.onDestroyTask
-      },
       modalConfig: {
         task: {}
       }
@@ -49,48 +50,6 @@ export default class TodoList extends React.Component {
 
   loadData() {
     TaskActions.loadData(this.props.todo.id);
-  }
-
-  render() {
-    let tasks = (this.state.tasks.length) ? this.state.tasks.map(this.taskRender): this.getEmptyList();
-
-    return (
-      <section className="todo-list">
-        <header className="todo-list__header">
-          <h2 className="todo-list__header__title">{this.props.todo.title}</h2>
-
-          <div className="todo-list__header__buttons">
-            <span title="Delete"
-                  className="glyphicon glyphicon-trash todo-list__header__buttons_delete-button"
-                  onClick={this.deleteTodo}></span>
-
-            <span title="Edit"
-                  className="glyphicon glyphicon-edit todo-list__header__buttons_edit-button"
-                  onClick={this.editTodo}></span>
-            <span title="Add"
-                  className="glyphicon glyphicon-plus todo-list__header__buttons_add-button"
-                  onClick={this.addTask}></span>
-          </div>
-        </header>
-
-        <ul className="todo-list__list">
-          {tasks}
-        </ul>
-
-        <TaskDialog isShowedModal={this.state.isShowedModal}
-                    modalType={'task'}
-                    modalConfig={this.state.modalConfig}
-                    modalMethods={this.state.modalMethods}/>
-      </section>
-    );
-  }
-
-  getEmptyList() {
-    return (
-      <li className="task-item">
-        <span>{'Tasks aren\'t created ...'}</span>
-      </li>
-    );
   }
 
   editTodo() {
@@ -146,6 +105,49 @@ export default class TodoList extends React.Component {
 
   addTask() {
     this.openTaskDilog({});
+  }
+
+
+  getEmptyList() {
+    return (
+      <li className="task-item">
+        <span>{'Tasks aren\'t created ...'}</span>
+      </li>
+    );
+  }
+
+  render() {
+    let tasks = (this.state.tasks.length) ? this.state.tasks.map(this.taskRender): this.getEmptyList();
+
+    return (
+      <section className="todo-list">
+        <header className="todo-list__header">
+          <h2 className="todo-list__header__title">{this.props.todo.title}</h2>
+
+          <div className="todo-list__header__buttons">
+            <span title="Delete"
+                  className="glyphicon glyphicon-trash todo-list__header__buttons_delete-button"
+                  onClick={this.deleteTodo}></span>
+
+            <span title="Edit"
+                  className="glyphicon glyphicon-edit todo-list__header__buttons_edit-button"
+                  onClick={this.editTodo}></span>
+            <span title="Add"
+                  className="glyphicon glyphicon-plus todo-list__header__buttons_add-button"
+                  onClick={this.addTask}></span>
+          </div>
+        </header>
+
+        <ul className="todo-list__list">
+          {tasks}
+        </ul>
+
+        <TaskDialog isShowedModal={this.state.isShowedModal}
+                    modalType={'task'}
+                    modalConfig={this.state.modalConfig}
+                    modalMethods={this.modalMethods}/>
+      </section>
+    );
   }
 
 }

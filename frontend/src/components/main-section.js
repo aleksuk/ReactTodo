@@ -10,14 +10,15 @@ export default class MainSection extends React.Component {
     super(...arguments);
     this.bindMethods();
 
+    this.modalMethods = {
+      onClose: this.closeTodoModal,
+      onSuccess: this.onSaveTodo,
+      onDanger: this.onDestroyTodo
+    };
+
     this.state = {
       todos: [],
       isShowedModal: false,
-      modalMethods: {
-        onClose: this.closeTodoModal,
-        onSuccess: this.onSaveTodo,
-        onDanger: this.onDestroyTodo
-      },
       modalConfig: {
         todo: {}
       }
@@ -45,29 +46,6 @@ export default class MainSection extends React.Component {
 
   loadTodos() {
     TodoActions.loadData();
-  }
-
-  render() {
-    return (
-      <section role="main" className="main-section container">
-        {this.state.todos.map(this.renderTodoList.bind(this))}
-
-        <TodoDialog isShowedModal={this.state.isShowedModal}
-                    modalType={'todo'}
-                    modalConfig={this.state.modalConfig}
-                    modalMethods={this.state.modalMethods} />
-
-        <footer>
-          <button className="btn btn-default" onClick={this.addTodo}>Add todo list</button>
-        </footer>
-      </section>
-    );
-  }
-
-  renderTodoList(todo) {
-    return (
-      <TodoList todo={todo} key={todo.id} onEdit={this.showEditDialog} onDelete={this.destroyTodo} />
-    );
   }
 
   onChange() {
@@ -112,6 +90,29 @@ export default class MainSection extends React.Component {
         todo: todo
       }
     });
+  }
+
+  renderTodoList(todo) {
+    return (
+      <TodoList todo={todo} key={todo.id} onEdit={this.showEditDialog} onDelete={this.destroyTodo} />
+    );
+  }
+  
+  render() {
+    return (
+      <section role="main" className="main-section container">
+        {this.state.todos.map(this.renderTodoList.bind(this))}
+
+        <TodoDialog isShowedModal={this.state.isShowedModal}
+                    modalType={'todo'}
+                    modalConfig={this.state.modalConfig}
+                    modalMethods={this.modalMethods} />
+
+        <footer>
+          <button className="btn btn-default" onClick={this.addTodo}>Add todo list</button>
+        </footer>
+      </section>
+    );
   }
 
 }

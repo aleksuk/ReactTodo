@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import DialogMixin from '../mixins/dialog-mixin';
-import _ from 'underscore';
 
 export default class TaskDialog extends DialogMixin {
 
@@ -9,6 +8,24 @@ export default class TaskDialog extends DialogMixin {
     super.bindMethods(...arguments);
 
     this.onTitleChange = this.onTitleChange.bind(this);
+  }
+
+  onTitleChange(event) {
+    let task = this.updateItemData({
+      title: event.target.value
+    });
+
+    this.setState({
+      task: task
+    });
+  }
+
+  updateData(data) {
+    let refs = this.refs;
+
+    return this.updateItemData({
+      title: refs.title.value
+    });
   }
 
   getDialogBody() {
@@ -37,24 +54,6 @@ export default class TaskDialog extends DialogMixin {
         <h3>{title}</h3>
       </div>
     )
-  }
-
-  onTitleChange(event) {
-    let task = this.updateItemData({
-      title: event.target.value
-    });
-
-    this.setState({
-      task: task
-    });
-  }
-
-  updateData(data) {
-    let refs = this.refs;
-
-    return this.updateItemData({
-      title: refs.title.value
-    });
   }
 
 }

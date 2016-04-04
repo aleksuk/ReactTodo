@@ -1,6 +1,7 @@
 import React from 'react';
 import MainHeader from './main-header';
 import MainFooter from './main-footer';
+import AlertNotify from './alert-notify';
 
 export default class PageWrapper extends React.Component {
 
@@ -12,6 +13,7 @@ export default class PageWrapper extends React.Component {
           {this.props.children}
         </section>
 
+        <AlertNotify />
         <MainFooter />
       </div>
     );
