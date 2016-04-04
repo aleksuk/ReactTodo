@@ -11,6 +11,7 @@
     "events": "^1.1.0",
     "flux": "^2.1.1",
     "keymirror": "^0.1.1",
+    "rc-dialog": "^6.0.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-router": "^2.0.1",

@@ -3,17 +3,18 @@ import MainHeader from './main-header';
 import MainFooter from './main-footer';
 
 export default class PageWrapper extends React.Component {
-  
+
   render() {
     return (
-      <div className="page-wrapper">
+      <div ref="app" className="page-wrapper">
         <section className="page-content">
           <MainHeader />
           {this.props.children}
         </section>
+
         <MainFooter />
       </div>
     );
   }
-  
+
 }

@@ -1,6 +1,13 @@
+/* Base */
 @import './base/variables';
 @import './base/mixins';
 @import './base/base';
 
+/* libs */
+@import '../../node_modules/rc-dialog/assets/bootstrap';
+
+/* components */
 @import './components/main-header';
 @import './components/main-footer';
+@import './components/todo-list';
+@import './components/task-item';

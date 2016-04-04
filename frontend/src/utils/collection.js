@@ -7,7 +7,9 @@ export default class Collection {
   }
 
   find(id) {
-    return _.find(this.data, 'id', id);
+    return _.find(this.data, function (el) {
+      return el.id === id;
+    });
   }
 
   toJSON() {
@@ -26,9 +28,15 @@ export default class Collection {
     this.data = [];
   }
 
+  remove(data) {
+    this.data = _.filter(this.data, function (el) {
+      return el.id !== data.id;
+    });
+  }
+
   updateItem(data) {
     var item = this.find(data.id);
-    
+
     _.extend(item, data);
   }
 

@@ -1,5 +1,6 @@
 import AppDispatcher from '../dispatcher/app-dispatcher';
 import TaskConstants from '../constants/task-constants';
+import TodoConstants from '../constants/todo-constants';
 import Collection from '../utils/collection';
 import { Store } from 'flux/utils';
 
@@ -19,18 +20,29 @@ class TaskStore extends Store {
 
   __onDispatch(action) {
     switch (action.actionType) {
-      case TaskConstants.TASKS_DATA_IS_UPDATED:
+      case TaskConstants.TASKS_ARE_UPDATED:
         getTasks(action.todoId).set(action.data.tasks);
         this.__emitChange();
         break;
 
-      case TaskConstants.TASK_DATA_IS_UPDATED:
+      case TaskConstants.TASK_IS_UPDATED:
         getTasks(action.todoId).updateItem(action.data.task);
         this.__emitChange();
         break;
-      case TaskConstants.TASK_UNCOMPLETE:
-        // getTasks(action.todoId).add(action.data.task);
-        // this.__emitChange();
+
+      case TaskConstants.TASK_IS_DESTROYED:
+        getTasks(action.todoId).remove(action.data.task);
+        this.__emitChange();
+        break;
+
+      case TaskConstants.TASK_IS_CREATED:
+        getTasks(action.todoId).add(action.data.task);
+        this.__emitChange();
+        break;
+
+      case TodoConstants.TODO_IS_DESTROYED:
+        getTasks(action.data.id).clear();
+        tasks[action.data.id] = null;
         break;
 
       default:

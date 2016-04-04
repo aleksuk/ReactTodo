@@ -3,33 +3,48 @@ import TodoActions from '../actions/todo-actions';
 import TaskActions from '../actions/task-actions';
 import TaskStore from '../stores/task-store';
 import TaskItem from './task-item';
+import TaskDialog from './task-dialog';
 
 export default class TodoList extends React.Component {
 
   constructor() {
     super(...arguments);
+    this.bindMethods();
 
     this.state = {
-      tasks: []
+      tasks: [],
+      isShowedModal: false,
+      modalMethods: {
+        onClose: this.closeTaskModal,
+        onSuccess: this.onSaveTask,
+        onDanger: this.onDestroyTask
+      },
+      modalConfig: {
+        task: {}
+      }
     };
-
-    this.bindMethods();
   }
 
   bindMethods() {
-    this._onChange = this._onChange.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.editTodo= this.editTodo.bind(this);
+    this.taskRender = this.taskRender.bind(this);
+    this.deleteTodo = this.deleteTodo.bind(this);
+    this.openTaskDilog = this.openTaskDilog.bind(this);
+    this.closeTaskModal = this.closeTaskModal.bind(this);
+    this.onSaveTask = this.onSaveTask.bind(this);
+    this.onDestroyTask = this.onDestroyTask.bind(this);
+    this.addTask = this.addTask.bind(this);
   }
 
   componentDidMount() {
-    TaskStore.addListener(this._onChange);
-    
-    setTimeout(() => {
-      this.loadData();
-    }, 0);
+    this.onChangeListener = TaskStore.addListener(this.onChange);
+
+    this.loadData();
   }
 
   componentWillUnmount() {
-    TaskStore.removeListener(this._onChange);
+    this.onChangeListener.remove();
   }
 
   loadData() {
@@ -37,25 +52,100 @@ export default class TodoList extends React.Component {
   }
 
   render() {
+    let tasks = (this.state.tasks.length) ? this.state.tasks.map(this.taskRender): this.getEmptyList();
+
     return (
       <section className="todo-list">
-        <h2>{this.props.todo.title}</h2>
-        <ul>
-          {this.state.tasks.map(this.taskRender.bind(this))}
+        <header className="todo-list__header">
+          <h2 className="todo-list__header__title">{this.props.todo.title}</h2>
+
+          <div className="todo-list__header__buttons">
+            <span title="Delete"
+                  className="glyphicon glyphicon-trash todo-list__header__buttons_delete-button"
+                  onClick={this.deleteTodo}></span>
+
+            <span title="Edit"
+                  className="glyphicon glyphicon-edit todo-list__header__buttons_edit-button"
+                  onClick={this.editTodo}></span>
+            <span title="Add"
+                  className="glyphicon glyphicon-plus todo-list__header__buttons_add-button"
+                  onClick={this.addTask}></span>
+          </div>
+        </header>
+
+        <ul className="todo-list__list">
+          {tasks}
         </ul>
+
+        <TaskDialog isShowedModal={this.state.isShowedModal}
+                    modalType={'task'}
+                    modalConfig={this.state.modalConfig}
+                    modalMethods={this.state.modalMethods}/>
       </section>
     );
   }
 
-  taskRender(el) {
+  getEmptyList() {
     return (
-      <TaskItem key={el.id} task={el} />
+      <li className="task-item">
+        <span>{'Tasks aren\'t created ...'}</span>
+      </li>
     );
   }
 
-  _onChange(id) {
+  editTodo() {
+    this.props.onEdit(this.props.todo);
+  }
+
+  taskRender(el) {
+    return (
+      <TaskItem key={el.id} task={el} onEdit={this.openTaskDilog} onDelete={this.onDestroyTask}/>
+    );
+  }
+
+  onChange() {
     this.setState({
       tasks: TaskStore.getAll(this.props.todo.id)
     });
   }
+
+  deleteTodo() {
+    this.props.onDelete(this.props.todo);
+  }
+
+  onSaveTask(task) {
+    this.closeTaskModal();
+
+    if (task.id) {
+      TaskActions.update(this.props.todo.id, task);
+    } else {
+      TaskActions.create(this.props.todo.id, task);
+    }
+  }
+
+  onDestroyTask(task) {
+    this.closeTaskModal();
+
+    TaskActions.destroy(this.props.todo.id, task);
+  }
+
+  closeTaskModal() {
+    this.setState({
+      isShowedModal: false
+    });
+  }
+
+  openTaskDilog(task) {
+    this.setState({
+      isShowedModal: true,
+      modalConfig: {
+        task: task
+      }
+    });
+  }
+
+  addTask() {
+    this.openTaskDilog({});
+  }
+
 }

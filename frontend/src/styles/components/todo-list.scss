@@ -1,0 +1,33 @@
+.todo-list {
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .5); /* Параметры тени */
+
+  &__header {
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    min-height: 4em;
+    background: $mine-shaft;
+
+    &__title {
+      margin: 0;
+      flex-grow: 1;
+      color: $white;
+    }
+
+    &__buttons {
+      &_delete-button,
+      &_add-button,
+      &_edit-button {
+        margin-left: 10px;
+        cursor: pointer;
+        color: $white;
+      }
+    }
+  }
+
+  &__list {
+    padding: 0;
+    list-style-type: none;
+  }
+}

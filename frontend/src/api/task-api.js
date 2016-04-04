@@ -1,34 +1,68 @@
 import ajax from 'reqwest';
 import TaskActions from '../actions/task-actions';
+import _ from 'underscore';
+
+var tasksListUrl = _.template('/todos/<%= todoId %>/tasks');
+var taskUrl = _.template('/todos/<%= todoId %>/tasks/<%= taskId %>')
 
 export default {
 
   findAll(todoId) {
     return ajax({
-      url: '/todos/' + todoId + '/tasks'
-    }).then((data) => TaskActions.updateCollectionData(todoId, data));
+      url: tasksListUrl({ todoId: todoId })
+    }).then((data) => {
+      TaskActions.updateCollectionData(todoId, data)
+    });
+  },
+
+  create(todoId, taskData) {
+    return ajax({
+      url: tasksListUrl({ todoId: todoId }),
+      method: 'post',
+      data: {
+        task: taskData
+      }
+    }).then((data) => {
+      TaskActions.addItem(todoId, data);
+    });
+  },
+
+  update(todoId, task) {
+    return this._update({ todoId: todoId, taskId: task.id }, task);
+  },
+
+  destroy(todoId, task) {
+    return ajax({
+      url: taskUrl({ todoId: todoId, taskId: task.id }),
+      method: 'delete'
+    }).then(() => {
+      TaskActions.deleteItem(todoId, { task: task });
+    })
   },
 
   complete(todoId, taskId) {
-    return this._update(todoId, taskId, {
+    return this._update({ todoId: todoId, taskId: taskId }, {
       isCompleted: true
     });
   },
 
   uncomplete(todoId, taskId) {
-    return this._update(todoId, taskId, {
+    return this._update({ todoId: todoId, taskId: taskId }, {
       isCompleted: false
     });
   },
 
-  _update(todoId, taskId, taskData) {
+  _update(urlParams, taskData) {
     return ajax({
-      url: '/todos/' + todoId + '/tasks/' + taskId,
+      url: taskUrl(urlParams),
       method: 'put',
       data: {
         task: taskData
       }
-    }).then((data) => TaskActions.updateItemData(todoId, data));
+    }).then((data) => {
+      console.log(data, 999);
+      TaskActions.updateItemData(urlParams.todoId, data)
+    });
   }
 
 };

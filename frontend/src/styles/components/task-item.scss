@@ -1,0 +1,25 @@
+.task-item {
+  padding: 1em 10px;
+  display: flex;
+  align-items: center;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $mine-shaft;
+  }
+
+  &__status {
+    margin-right: 5px;
+  }
+
+  &__content {
+    flex-grow: 1;
+  }
+
+  &__buttons {
+    &-delete,
+    &-edit {
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
+}

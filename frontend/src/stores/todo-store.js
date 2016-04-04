@@ -13,13 +13,23 @@ class TodoStore extends Store {
 
   __onDispatch(action) {
     switch (action.actionType) {
-      case TodoConstants.TODOS_DATA_IS_UPDATED:
+      case TodoConstants.TODOS_ARE_UPDATED:
         todosCollection.set(action.data.todos);
         this.__emitChange();
         break;
 
-      case TodoConstants.TODO_CREATE:
-        todos.add(action.data);
+      case TodoConstants.TODO_IS_CREATED:
+        todosCollection.add(action.data.todo);
+        this.__emitChange();
+        break;
+
+      case TodoConstants.TODO_IS_DESTROYED:
+        todosCollection.remove(action.data.todo);
+        this.__emitChange();
+        break;
+
+      case TodoConstants.TODO_IS_UPDATED:
+        todosCollection.updateItem(action.data);
         this.__emitChange();
         break;
 
@@ -29,6 +39,5 @@ class TodoStore extends Store {
   }
 
 }
-
 
 export default new TodoStore(AppDispatcher);
