@@ -29,7 +29,7 @@ class TodoStore extends Store {
         break;
 
       case TodoConstants.TODO_IS_UPDATED:
-        todosCollection.updateItem(action.data);
+        todosCollection.updateItem(action.data.todo);
         this.__emitChange();
         break;
 
