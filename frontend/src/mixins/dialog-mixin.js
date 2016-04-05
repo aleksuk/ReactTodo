@@ -31,18 +31,35 @@ export default class DialogMixin extends React.Component {
     return this.props.modalConfig;
   }
 
-  render() {
-    let modalConfig = this.getModalConfig();
-
-    return (
-      <Dialog visible={this.props.isShowedModal}
-              footer={this.getDialogFooter()}
-              title={this.getDialogTitle()}
-              onClose={this.onClose}>
-        {this.getDialogBody()}
-      </Dialog>
-    );
+  onDanger() {
+    this.props.modalMethods.onDanger(this.state[this.dataField]);
   }
+
+  onCancel() {
+    this.props.modalMethods.onClose();
+  }
+
+  onClose() {
+    this.props.modalMethods.onClose()
+  }
+
+  onSuccess() {
+    let updatedData = this.updateData();
+
+    this.props.modalMethods.onSuccess(updatedData);
+  }
+
+  updateItemData(data) {
+    return _.extend({}, this.state[this.dataField], data);
+  }
+
+  updateData() {
+    return {};
+  }
+
+  getDialogTitle() {}
+
+  getDialogBody() {}
 
   getDialogFooter() {
     let modalConfig = this.getModalConfig();
@@ -75,34 +92,17 @@ export default class DialogMixin extends React.Component {
     );
   }
 
-  onDanger() {
-    this.props.modalMethods.onDanger(this.state[this.dataField]);
+  render() {
+    let modalConfig = this.getModalConfig();
+
+    return (
+      <Dialog visible={this.props.isShowedModal}
+              footer={this.getDialogFooter()}
+              title={this.getDialogTitle()}
+              onClose={this.onClose}>
+        {this.getDialogBody()}
+      </Dialog>
+    );
   }
-
-  onCancel() {
-    this.props.modalMethods.onClose();
-  }
-
-  onClose() {
-    this.props.modalMethods.onClose()
-  }
-
-  onSuccess() {
-    let updatedData = this.updateData();
-
-    this.props.modalMethods.onSuccess(updatedData);
-  }
-
-  updateItemData(data) {
-    return _.extend({}, this.state[this.dataField], data);
-  }
-
-  updateData() {
-    return {};
-  }
-
-  getDialogTitle() {}
-
-  getDialogBody() {}
 
 }
