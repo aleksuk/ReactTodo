@@ -15,6 +15,7 @@ class TodosController < ApplicationController
     if @todo.update(todo_params)
       render :show
     else
+      @errors = @todo.errors
       render 'base/errors', status: 400
     end
   end

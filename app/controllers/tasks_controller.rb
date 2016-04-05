@@ -15,6 +15,7 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       render :show
     else
+      @errors = @task.errors
       render 'base/errors', status: 400
     end
   end
