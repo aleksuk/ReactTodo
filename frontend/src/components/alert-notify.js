@@ -7,6 +7,7 @@ export default class AlertNotify extends React.Component {
   constructor() {
     super(...arguments);
 
+    this.bindMethods();
     this.state = {
       showNotify: false,
       notifyConfig: {
@@ -17,10 +18,12 @@ export default class AlertNotify extends React.Component {
 
   bindMethods() {
     this.hideNotify = this.hideNotify.bind(this);
+    this.closeNotify = this.closeNotify.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
-    this.onChangeListener = NotifyStore.addListener(this.onChange.bind(this));
+    this.onChangeListener = NotifyStore.addListener(this.onChange);
   }
 
   componentWillUnmount() {
@@ -41,6 +44,11 @@ export default class AlertNotify extends React.Component {
     NotifyActions.hideNotify();
   }
 
+  closeNotify() {
+    clearTimeout(this.showTimer);
+    this.hideNotify();
+  }
+
   onChange() {
     let config = NotifyStore.getConfig();
     this.setState(config);
@@ -55,7 +63,7 @@ export default class AlertNotify extends React.Component {
       <div className={notifyClasses}>
         <div className={alertClasses}>
           <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true" onClick={this.closeNotify}>&times;</span>
           </button>
 
           <strong>{notifyConfig.strongMessage}</strong>&nbsp;
