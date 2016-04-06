@@ -2,16 +2,17 @@ import _ from 'underscore';
 import NotifyActions from '../actions/notify-actions';
 
 export default function showError(response) {
+  var defaultError = {
+    field: 'Server Error!',
+    message: 'Something went wrong!'
+  };
   var error;
 
   try {
     let json = JSON.parse(response.responseText);
-    error = _.first(json.errors);
+    error = _.first(json.errors) || defaultError;
   } catch (e) {
-    error = {
-      field: 'Server Error!',
-      message: 'Something went wrong!'
-    };
+    error = defaultError;
   }
 
   NotifyActions.showDangerNotify({

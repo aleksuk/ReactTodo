@@ -19,9 +19,9 @@ export default class TaskItem extends React.Component {
     let task = this.props.task;
 
     if (task.isCompleted) {
-      TaskActions.uncompleteTask(task.todo_id, task.id);
+      TaskActions.uncompleteTask(this.props.todo.id, task.id);
     } else {
-      TaskActions.completeTask(task.todo_id, task.id);
+      TaskActions.completeTask(this.props.todo.id, task.id);
     }
   }
 
@@ -50,6 +50,7 @@ export default class TaskItem extends React.Component {
         <div className="task-item__buttons">
           <span className="glyphicon glyphicon-remove task-item__buttons-delete"
                 onClick={this.deleteTask}></span>
+                
           <span className="glyphicon glyphicon-edit task-item__buttons-edit"
                 onClick={this.editTask}></span>
         </div>

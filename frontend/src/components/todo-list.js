@@ -58,7 +58,11 @@ export default class TodoList extends React.Component {
 
   taskRender(el) {
     return (
-      <TaskItem key={el.id} task={el} onEdit={this.openTaskDilog} onDelete={this.onDestroyTask}/>
+      <TaskItem key={el.id}
+                task={el}
+                todo={this.props.todo}
+                onEdit={this.openTaskDilog}
+                onDelete={this.onDestroyTask} />
     );
   }
 
@@ -132,6 +136,7 @@ export default class TodoList extends React.Component {
             <span title="Edit"
                   className="glyphicon glyphicon-edit todo-list__header__buttons_edit-button"
                   onClick={this.editTodo}></span>
+
             <span title="Add"
                   className="glyphicon glyphicon-plus todo-list__header__buttons_add-button"
                   onClick={this.addTask}></span>
