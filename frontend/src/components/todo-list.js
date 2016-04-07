@@ -1,6 +1,8 @@
 import React from 'react';
 import TodoActions from '../actions/todo-actions';
 import TaskActions from '../actions/task-actions';
+import TodoDialogActions from '../actions/todo-dialog-actions';
+import TaskDialogActions from '../actions/task-dialog-actions';
 import TaskStore from '../stores/task-store';
 import TaskItem from './task-item';
 import TaskDialog from './task-dialog';
@@ -11,18 +13,8 @@ export default class TodoList extends React.Component {
     super(...arguments);
     this.bindMethods();
 
-    this.modalMethods = {
-      onClose: this.closeTaskModal,
-      onSuccess: this.onSaveTask,
-      onDanger: this.onDestroyTask
-    };
-
     this.state = {
-      tasks: [],
-      isShowedModal: false,
-      modalConfig: {
-        task: {}
-      }
+      tasks: []
     };
   }
 
@@ -31,10 +23,6 @@ export default class TodoList extends React.Component {
     this.editTodo= this.editTodo.bind(this);
     this.taskRender = this.taskRender.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
-    this.openTaskDilog = this.openTaskDilog.bind(this);
-    this.closeTaskModal = this.closeTaskModal.bind(this);
-    this.onSaveTask = this.onSaveTask.bind(this);
-    this.onDestroyTask = this.onDestroyTask.bind(this);
     this.addTask = this.addTask.bind(this);
   }
 
@@ -53,16 +41,14 @@ export default class TodoList extends React.Component {
   }
 
   editTodo() {
-    this.props.onEdit(this.props.todo);
+    TodoDialogActions.showDialog(this.props.todo);
   }
 
   taskRender(el) {
     return (
       <TaskItem key={el.id}
                 task={el}
-                todo={this.props.todo}
-                onEdit={this.openTaskDilog}
-                onDelete={this.onDestroyTask} />
+                todo={this.props.todo} />
     );
   }
 
@@ -73,44 +59,12 @@ export default class TodoList extends React.Component {
   }
 
   deleteTodo() {
-    this.props.onDelete(this.props.todo);
-  }
-
-  onSaveTask(task) {
-    this.closeTaskModal();
-
-    if (task.id) {
-      TaskActions.update(this.props.todo.id, task);
-    } else {
-      TaskActions.create(this.props.todo.id, task);
-    }
-  }
-
-  onDestroyTask(task) {
-    this.closeTaskModal();
-
-    TaskActions.destroy(this.props.todo.id, task);
-  }
-
-  closeTaskModal() {
-    this.setState({
-      isShowedModal: false
-    });
-  }
-
-  openTaskDilog(task) {
-    this.setState({
-      isShowedModal: true,
-      modalConfig: {
-        task: task
-      }
-    });
+    TodoActions.destroy(this.props.todo);
   }
 
   addTask() {
-    this.openTaskDilog({});
+    TaskDialogActions.showDialog(this.props.todo.id, {});
   }
-
 
   getEmptyList() {
     return (
@@ -146,11 +100,6 @@ export default class TodoList extends React.Component {
         <ul className="todo-list__list">
           {tasks}
         </ul>
-
-        <TaskDialog isShowedModal={this.state.isShowedModal}
-                    modalType={'task'}
-                    modalConfig={this.state.modalConfig}
-                    modalMethods={this.modalMethods}/>
       </section>
     );
   }

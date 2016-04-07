@@ -1,6 +1,7 @@
 import ajax from 'reqwest';
 import TodoActions from '../actions/todo-actions';
 import NotifyActions from '../actions/notify-actions';
+import TodoDialogActions from '../actions/todo-dialog-actions';
 import showErrorNotify from '../utils/notify-error';
 import _ from 'underscore';
 
@@ -25,12 +26,12 @@ export default {
         todo: todo
       }
     }).then((data) => {
+      TodoDialogActions.hideDialog();
+      TodoActions.addItem(data)
       NotifyActions.showSuccessNotify({
         strongMessage: 'Success!',
         message: 'Todo created!'
       });
-
-      TodoActions.addItem(data)
     }, showErrorNotify);
   },
 
@@ -42,12 +43,12 @@ export default {
         todo: todo
       }
     }).then((data) => {
+      TodoDialogActions.hideDialog();
+      TodoActions.updateItemData(data)
       NotifyActions.showSuccessNotify({
         strongMessage: 'Success!',
         message: 'Todo updated!'
       });
-
-      TodoActions.updateItemData(data)
     }, showErrorNotify);
   },
 
@@ -56,12 +57,12 @@ export default {
       method: 'delete',
       url: todoUrl({ todoId: todo.id })
     }).then(() => {
+      TodoDialogActions.hideDialog();
+      TodoActions.deleteItem({ todo: todo })
       NotifyActions.showSuccessNotify({
         strongMessage: 'Success!',
         message: 'Todo destroyed!'
       });
-
-      TodoActions.deleteItem({ todo: todo })
     }, showErrorNotify);
   }
 

@@ -1,6 +1,7 @@
 import ajax from 'reqwest';
 import TaskActions from '../actions/task-actions';
 import NotifyActions from '../actions/notify-actions';
+import TaskDialogActions from '../actions/task-dialog-actions';
 import showErrorNotify from '../utils/notify-error';
 import _ from 'underscore';
 
@@ -25,12 +26,12 @@ export default {
         task: taskData
       }
     }).then((data) => {
+      TaskDialogActions.hideDialog();
+      TaskActions.addItem(todoId, data);
       NotifyActions.showSuccessNotify({
         strongMessage: 'Task',
         message: 'success created!'
       });
-
-      TaskActions.addItem(todoId, data);
     }, showErrorNotify);
   },
 
@@ -43,12 +44,12 @@ export default {
       url: taskUrl({ todoId: todoId, taskId: task.id }),
       method: 'delete'
     }).then(() => {
+      TaskDialogActions.hideDialog();
+      TaskActions.deleteItem(todoId, { task: task });
       NotifyActions.showSuccessNotify({
         strongMessage: 'Success!',
         message: 'Task destroyed!'
       });
-
-      TaskActions.deleteItem(todoId, { task: task });
     }, showErrorNotify);
   },
 
@@ -72,12 +73,12 @@ export default {
         task: taskData
       }
     }).then((data) => {
+      TaskDialogActions.hideDialog();
+      TaskActions.updateItemData(urlParams.todoId, data)
       NotifyActions.showSuccessNotify({
         strongMessage: 'Success!',
         message: 'Task updated!'
       });
-
-      TaskActions.updateItemData(urlParams.todoId, data)
     }, showErrorNotify);
   }
 

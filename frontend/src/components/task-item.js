@@ -1,5 +1,6 @@
 import React from 'react';
 import TaskActions from '../actions/task-actions';
+import TaskDialogActions from '../actions/task-dialog-actions';
 
 export default class TaskItem extends React.Component {
 
@@ -26,11 +27,11 @@ export default class TaskItem extends React.Component {
   }
 
   editTask() {
-    this.props.onEdit(this.props.task);
+    TaskDialogActions.showDialog(this.props.todo.id, this.props.task);
   }
 
   deleteTask() {
-    this.props.onDelete(this.props.task);
+    TaskActions.destroy(this.props.todo.id, this.props.task);
   }
 
   render() {
@@ -50,7 +51,7 @@ export default class TaskItem extends React.Component {
         <div className="task-item__buttons">
           <span className="glyphicon glyphicon-remove task-item__buttons-delete"
                 onClick={this.deleteTask}></span>
-                
+
           <span className="glyphicon glyphicon-edit task-item__buttons-edit"
                 onClick={this.editTask}></span>
         </div>

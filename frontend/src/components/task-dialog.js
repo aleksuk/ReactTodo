@@ -1,8 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import DialogMixin from '../mixins/dialog-mixin';
+import TaskActions from '../actions/task-actions';
+import TaskDialogActions from '../actions/task-dialog-actions';
+import TaskDialogStore from '../stores/task-dialog-store';
 
 export default class TaskDialog extends DialogMixin {
+
+  componentDidMount() {
+    this.onChangeListener = TaskDialogStore.addListener(this.onChange);
+  }
+
+  componentWillUnmount() {
+    this.onChangeListener.remove();
+  }
+
+  setInitState(props) {
+    this.state = TaskDialogStore.getConfig();
+  }
 
   bindMethods() {
     super.bindMethods(...arguments);
@@ -20,15 +34,43 @@ export default class TaskDialog extends DialogMixin {
     });
   }
 
-  updateData(data) {
-    let refs = this.refs;
+  getTask() {
+    return this.state.task;
+  }
 
-    return this.updateItemData({
-      title: refs.title.value
-    });
+  onChange() {
+    let config = TaskDialogStore.getConfig();
+    this.setState(config);
+  }
+
+  onClose() {
+    TaskDialogActions.hideDialog();
+  }
+
+  onSuccess() {
+    let task = this.getTask();
+    TaskActions.save(this.state.todoId, task);
+  }
+
+  onDanger() {
+    let task = this.getTask();
+    TaskActions.destroy(this.state.todoId, task);
+  }
+
+  getDialogTitle() {
+    let task = this.getTask();
+    let title = (task.id) ? 'Edit task' : 'Create new task';
+
+    return (
+      <div className="task-dialog__header">
+        <h3>{title}</h3>
+      </div>
+    )
   }
 
   getDialogBody() {
+    let task = this.getTask();
+
     return (
       <form>
         <div className="form-group">
@@ -37,23 +79,12 @@ export default class TaskDialog extends DialogMixin {
                  id="title"
                  ref="title"
                  className="form-control"
-                 value={this.state.task.title}
+                 value={task.title}
                  onChange={this.onTitleChange}
                  placeholder="Input task title ..." />
         </div>
       </form>
     );
-  }
-
-  getDialogTitle() {
-    let modalConfig = this.getModalConfig();
-    let title = (modalConfig[this.dataField].id) ? 'Edit task' : 'Create new task';
-
-    return (
-      <div className="todo-dialog__header">
-        <h3>{title}</h3>
-      </div>
-    )
   }
 
 }

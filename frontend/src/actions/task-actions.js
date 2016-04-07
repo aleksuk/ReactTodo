@@ -8,24 +8,12 @@ var TaskActions = {
     TaskApi.findAll(todoId);
   },
 
-  create(todoId, data) {
-    AppDispatcher.dispatch({
-      actionType: TaskConstants.TASK_CREATE,
-      data: data,
-      todoId: todoId
-    });
-
-    TaskApi.create(todoId, data);
-  },
-
-  update(todoId, data) {
-    AppDispatcher.dispatch({
-      actionType: TaskConstants.TASK_UPDATE,
-      data: data,
-      todoId: todoId
-    });
-
-    TaskApi.update(todoId, data);
+  save(todoId, data) {
+    if (data.id) {
+      this._update(todoId, data);
+    } else {
+      this._create(todoId, data);
+    }
   },
 
   destroy(todoId, data) {
@@ -88,6 +76,26 @@ var TaskActions = {
       todoId: todoId,
       data: data
     });
+  },
+
+  _create(todoId, data) {
+    AppDispatcher.dispatch({
+      actionType: TaskConstants.TASK_CREATE,
+      data: data,
+      todoId: todoId
+    });
+
+    TaskApi.create(todoId, data);
+  },
+
+  _update(todoId, data) {
+    AppDispatcher.dispatch({
+      actionType: TaskConstants.TASK_UPDATE,
+      data: data,
+      todoId: todoId
+    });
+
+    TaskApi.update(todoId, data);
   }
 
 };

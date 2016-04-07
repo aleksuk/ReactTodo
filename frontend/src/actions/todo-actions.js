@@ -4,13 +4,12 @@ import TodoApi from '../api/todo-api';
 
 var TodoActions = {
 
-  create(data) {
-    AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_CREATE,
-      data: data
-    });
-
-    TodoApi.create(data);
+  save(data) {
+    if (data.id) {
+      this._update(data);
+    } else {
+      this._create(data);
+    }
   },
 
   destroy(data) {
@@ -20,15 +19,6 @@ var TodoActions = {
     });
 
     TodoApi.destroy(data);
-  },
-
-  update(data) {
-    AppDispatcher.dispatch({
-      actionType: TodoConstants.TODO_UPDATE,
-      data: data
-    });
-
-    TodoApi.update(data);
   },
 
   loadData() {
@@ -61,6 +51,24 @@ var TodoActions = {
       actionType: TodoConstants.TODO_IS_DESTROYED,
       data: data
     });
+  },
+
+  _update(data) {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_UPDATE,
+      data: data
+    });
+
+    TodoApi.update(data);
+  },
+
+  _create(data) {
+    AppDispatcher.dispatch({
+      actionType: TodoConstants.TODO_CREATE,
+      data: data
+    });
+
+    TodoApi.create(data);
   }
 
 };

@@ -8,10 +8,7 @@ export default class DialogMixin extends React.Component {
   constructor(props) {
     super(...arguments);
     this.bindMethods();
-    this.dataField = props.modalType;
-    this.state = {
-      [this.dataField]: props.modalConfig[this.dataField]
-    };
+    this.setInitState();
   }
 
   bindMethods() {
@@ -19,50 +16,26 @@ export default class DialogMixin extends React.Component {
     this.onDanger = this.onDanger.bind(this);
     this.onSuccess = this.onSuccess.bind(this);
     this.onCancel = this.onCancel.bind(this);
-  }
-
-  componentWillReceiveProps(next) {
-    this.setState({
-      [this.dataField]: next.modalConfig[this.dataField]
-    });
-  }
-
-  getModalConfig() {
-    return this.props.modalConfig;
-  }
-
-  onDanger() {
-    this.props.modalMethods.onDanger(this.state[this.dataField]);
+    this.onChange = this.onChange.bind(this);
   }
 
   onCancel() {
-    this.props.modalMethods.onClose();
-  }
-
-  onClose() {
-    this.props.modalMethods.onClose()
-  }
-
-  onSuccess() {
-    let updatedData = this.updateData();
-
-    this.props.modalMethods.onSuccess(updatedData);
+    this.onClose();
   }
 
   updateItemData(data) {
-    return _.extend({}, this.state[this.dataField], data);
+    return _.extend({}, this.state[this.state.type], data);
   }
 
-  updateData() {
-    return {};
-  }
+  setInitState() {}
 
   getDialogTitle() {}
 
   getDialogBody() {}
 
+  onChange() {}
+
   getDialogFooter() {
-    let modalConfig = this.getModalConfig();
     let buttons = [];
 
     buttons.push(
@@ -71,7 +44,7 @@ export default class DialogMixin extends React.Component {
               onClick={this.onCancel}>Cancel</button>
     );
 
-    if (modalConfig[this.dataField].id) {
+    if (this.state[this.state.type].id) {
       buttons.push(
         <button key={buttons.length}
                 className="btn btn-danger todo-dialog__footer_save-button"
@@ -93,10 +66,8 @@ export default class DialogMixin extends React.Component {
   }
 
   render() {
-    let modalConfig = this.getModalConfig();
-
     return (
-      <Dialog visible={this.props.isShowedModal}
+      <Dialog visible={this.state.isShowedDialog}
               footer={this.getDialogFooter()}
               title={this.getDialogTitle()}
               onClose={this.onClose}>
